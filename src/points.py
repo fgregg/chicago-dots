@@ -6,6 +6,10 @@ import random
 import sys
 
 
+def randround(x):
+    return int(x + random.random())
+
+
 def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
     "Collect data into non-overlapping fixed-length chunks or blocks"
     # grouper('ABCDEFG', 3, fillvalue='x') --> ABC DEF Gxx
@@ -42,7 +46,7 @@ def main(infile):
     blocks = json.load(infile)
     for feature in blocks["features"]:
         geometry = feature["geometry"]
-        n_points = int(feature["properties"]["P1_001N"] // 70)
+        n_points = randround(feature["properties"]["P1_001N"] / 200)
         if geometry["type"] == "Polygon":
             coords = geometry["coordinates"]
             flattened_coords = earcut.flatten(coords)["vertices"]
