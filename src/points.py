@@ -1,3 +1,4 @@
+import itertools
 import json
 import random
 import sys
@@ -35,7 +36,7 @@ def triangulate_geometry(geometry):
     elif geometry["type"] == "MultiPolygon":
         for polygon_coords in geometry["coordinates"]:
             polygon_triangles = triangulate_polygon(polygon_coords)
-            triangles = numpy.vstack(triangles, polygon_triangles)
+            triangles = numpy.vstack((triangles, polygon_triangles))
 
     return triangles
 
@@ -55,7 +56,7 @@ def areas(triangles):
     ab = triangles[:, 1, :] - triangles[:, 0, :]
     ac = triangles[:, 2, :] - triangles[:, 0, :]
 
-    return numpy.sqrt(numpy.cross(ab, ac)) / 2
+    return numpy.abs(numpy.cross(ab, ac) / 2)
 
 
 def points_in_feature(feature, n_points):
@@ -64,6 +65,10 @@ def points_in_feature(feature, n_points):
 
     triangles = triangulate_geometry(feature["geometry"])
     weights = areas(triangles)
+    nans = numpy.isnan(weights)
+    triangles = triangles[~nans]
+    weights = weights[~nans]
+
     weights /= weights.sum()
 
     points_per_triangles = numpy.random.multinomial(n_points, weights)
@@ -78,6 +83,28 @@ def points_in_feature(feature, n_points):
     return polygon_points
 
 
+def block_key(feature):
+    return (
+        feature["properties"]["geoid"],
+        feature["properties"]["p1_001n"],
+    )
+
+
+def density(code):
+    if code >= "1200":
+        return 0.001
+    elif code == "1111":
+        return 1.0
+    elif code == "1112":
+        return 2.0
+    elif code.startswith("113"):
+        return 10.0
+    elif code.startswith("114"):
+        return 5.0
+    elif code.startswith("115"):
+        return 0.001
+
+
 @click.command()
 @click.argument("infile", type=click.File("r"), nargs=1)
 @click.option("--units-per-dot", type=int, nargs=1, default=1)
@@ -85,10 +112,30 @@ def main(infile, units_per_dot):
 
     multipoint = []
     blocks = json.load(infile)
-    for feature in blocks["features"]:
-        n_points = randround(feature["properties"]["P1_001N"] / units_per_dot)
-        points = points_in_feature(feature, n_points)
-        multipoint.extend(points)
+
+    for (_, population), components_g in itertools.groupby(
+        blocks["features"], block_key
+    ):
+        components = list(components_g)
+
+        land_use_weights = numpy.array(
+            [
+                component["properties"]["intersection_area"]
+                * density(component["properties"]["landuse"])
+                for component in components
+            ]
+        )
+        land_use_weights /= land_use_weights.sum()
+
+        points_per_component = numpy.random.multinomial(
+            randround(population / units_per_dot), land_use_weights
+        )
+
+        for i, component in enumerate(components):
+
+            if k := points_per_component[i] > 0:
+                points = points_in_feature(component, k)
+                multipoint.extend(points)
 
     geojson_points = {
         "type": "FeatureCollection",
