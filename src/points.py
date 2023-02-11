@@ -1,77 +1,98 @@
 import json
-import click
-import earcut.earcut as earcut
-import itertools
 import random
 import sys
+
+import click
+import earcut.earcut as earcut
+import numpy
 
 
 def randround(x):
     return int(x + random.random())
 
 
-def grouper(iterable, n, *, incomplete="fill", fillvalue=None):
-    "Collect data into non-overlapping fixed-length chunks or blocks"
-    # grouper('ABCDEFG', 3, fillvalue='x') --> ABC DEF Gxx
-    # grouper('ABCDEFG', 3, incomplete='strict') --> ABC DEF ValueError
-    # grouper('ABCDEFG', 3, incomplete='ignore') --> ABC DEF
-    args = [iter(iterable)] * n
-    if incomplete == "fill":
-        return itertools.zip_longest(*args, fillvalue=fillvalue)
-    if incomplete == "strict":
-        return zip(*args, strict=True)
-    if incomplete == "ignore":
-        return zip(*args)
-    else:
-        raise ValueError("Expected fill, strict, or ignore")
+def random_points(triangle, k):
+
+    u = numpy.random.rand(k, 2)
+
+    invert = u.sum(axis=1) > 1
+    u[invert, :] = 1 - u[invert, :]
+
+    a = triangle[1, :] - triangle[0, :]
+    b = triangle[2, :] - triangle[0, :]
+
+    pts = triangle[0, :] + (
+        u[:, 0][:, numpy.newaxis] * a + u[:, 1][:, numpy.newaxis] * b
+    )
+
+    return pts
 
 
-def random_point(triangle):
-    ((ax, ay), (bx, by), (cx, cy)) = triangle
-    a = (bx - ax, by - ay)
-    b = (cx - ax, cy - ay)
-    u1, u2 = random.random(), random.random()
-    if u1 + u2 > 1:
-        u1 = 1 - u1
-        u2 = 1 - u2
-    w = (u1 * a[0] + u2 * b[0], u1 * a[1] + u2 * b[1])
-    return (w[0] + ax, w[1] + ay)
+def triangulate_geometry(geometry):
+
+    triangles = numpy.empty((0, 3, 2))
+
+    if geometry["type"] == "Polygon":
+        triangles = triangulate_polygon(geometry["coordinates"])
+    elif geometry["type"] == "MultiPolygon":
+        for polygon_coords in geometry["coordinates"]:
+            polygon_triangles = triangulate_polygon(polygon_coords)
+            triangles = numpy.vstack(triangles, polygon_triangles)
+
+    return triangles
+
+
+def triangulate_polygon(geojson_coords):
+
+    flattened_coords = earcut.flatten(geojson_coords)["vertices"]
+
+    triangle_indices = numpy.reshape(earcut.earcut(flattened_coords), (-1, 3))
+    coords = numpy.reshape(flattened_coords, (-1, 2))
+
+    return coords[triangle_indices]
+
+
+def areas(triangles):
+
+    ab = triangles[:, 1, :] - triangles[:, 0, :]
+    ac = triangles[:, 2, :] - triangles[:, 0, :]
+
+    return numpy.sqrt(numpy.cross(ab, ac)) / 2
+
+
+def points_in_feature(feature, n_points):
+
+    polygon_points = []
+
+    triangles = triangulate_geometry(feature["geometry"])
+    weights = areas(triangles)
+    weights /= weights.sum()
+
+    points_per_triangles = numpy.random.multinomial(n_points, weights)
+    triangles_with_points = points_per_triangles.nonzero()[0]
+
+    for i in triangles_with_points:
+        triangle = triangles[i, :, :]
+        points_per_triangle = points_per_triangles[i]
+        points = random_points(triangle, points_per_triangle)
+        polygon_points.extend(points.tolist())
+
+    return polygon_points
 
 
 @click.command()
 @click.argument("infile", type=click.File("r"), nargs=1)
-def main(infile):
+@click.option("--units-per-dot", type=int, nargs=1, default=1)
+def main(infile, units_per_dot):
 
     multipoint = []
     blocks = json.load(infile)
     for feature in blocks["features"]:
-        geometry = feature["geometry"]
-        n_points = randround(feature["properties"]["P1_001N"] / 200)
-        if geometry["type"] == "Polygon":
-            coords = geometry["coordinates"]
-            flattened_coords = earcut.flatten(coords)["vertices"]
-            triangle_indices = earcut.earcut(flattened_coords)
-            triangles = []
-            weights = []
-            for each in grouper(triangle_indices, 3):
-                try:
-                    triangle = (a, b, c) = tuple(coords[0][i] for i in each)
-                except IndexError:
-                    # something is going wrong with holes
-                    continue
+        n_points = randround(feature["properties"]["P1_001N"] / units_per_dot)
+        points = points_in_feature(feature, n_points)
+        multipoint.extend(points)
 
-                double_area = (
-                    a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])
-                )
-                triangles.append(triangle)
-                weights.append(double_area)
-
-            random_triangles = random.choices(triangles, weights, k=n_points)
-            for triangle in random_triangles:
-                point = random_point(triangle)
-                multipoint.append(point)
-
-    random_points = {
+    geojson_points = {
         "type": "FeatureCollection",
         "features": [
             {
@@ -85,4 +106,4 @@ def main(infile):
         ],
     }
 
-    json.dump(random_points, sys.stdout)
+    json.dump(geojson_points, sys.stdout)
