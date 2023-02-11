@@ -21,9 +21,7 @@ def random_points(triangle, k):
     a = triangle[1, :] - triangle[0, :]
     b = triangle[2, :] - triangle[0, :]
 
-    pts = triangle[0, :] + (
-        u[:, 0][:, numpy.newaxis] * a + u[:, 1][:, numpy.newaxis] * b
-    )
+    pts = triangle[0, :] + u @ numpy.c_[a, b]
 
     return pts
 
