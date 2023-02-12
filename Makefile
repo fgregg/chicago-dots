@@ -11,6 +11,7 @@ chicago.db : raw/blocks_2020.geojson Landuse2018_CMAP_v1.gdb buildings.shp
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -t_srs "EPSG:4326" $@ raw/blocks_2020.geojson -nlt PROMOTE_TO_MULTI
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ Landuse2018_CMAP_v1.gdb -nlt PROMOTE_TO_MULTI
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ buildings.shp -nlt PROMOTE_TO_MULTI
+	spatialite $@ < scripts/landuse_buildings.sql
 
 buildings.shp : raw/buildings.zip
 	unzip $<
