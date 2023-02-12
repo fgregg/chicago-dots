@@ -7,6 +7,8 @@ import click
 import earcut.earcut as earcut
 import numpy
 
+from .densities import densities
+
 
 def randround(x):
     return int(x + random.random())
@@ -90,21 +92,6 @@ def block_key(feature):
     )
 
 
-def density(code):
-    if code >= "1200":
-        return 0.001
-    elif code == "1111":
-        return 1.0
-    elif code == "1112":
-        return 2.0
-    elif code.startswith("113"):
-        return 10.0
-    elif code.startswith("114"):
-        return 5.0
-    elif code.startswith("115"):
-        return 0.001
-
-
 @click.command()
 @click.argument("infile", type=click.File("r"), nargs=1)
 @click.option("--units-per-dot", type=int, nargs=1, default=1)
@@ -112,6 +99,8 @@ def main(infile, units_per_dot):
 
     multipoint = []
     blocks = json.load(infile)
+
+    landuse_densities = densities(blocks["features"])
 
     for (_, population), components_g in itertools.groupby(
         blocks["features"], block_key
@@ -121,7 +110,7 @@ def main(infile, units_per_dot):
         land_use_weights = numpy.array(
             [
                 component["properties"]["intersection_area"]
-                * density(component["properties"]["landuse"])
+                * landuse_densities[component["properties"]["landuse"]]
                 for component in components
             ]
         )

@@ -2,7 +2,7 @@ points.geojson : points_full_precision.geojson
 	npx geojson-precision $< $@
 
 points_full_precision.geojson : landuse_target.geojson
-	points --units-per-dot=50 $< > $@
+	points --units-per-dot=200 $< > $@
 
 landuse_target.geojson : chicago.db
 	ogr2ogr -f GeoJSON $@ $< -sql @scripts/landuse_target.sql -dialect sqlite

@@ -19,11 +19,3 @@ WHERE
     intersection_area IS NOT NULL
 ORDER BY
     geoid
-
-
-
-
-
-
-
-
