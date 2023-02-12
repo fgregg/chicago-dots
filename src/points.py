@@ -1,5 +1,6 @@
 import itertools
 import json
+import logging
 import random
 import sys
 
@@ -85,22 +86,46 @@ def points_in_feature(feature, n_points):
     return polygon_points
 
 
-def block_key(feature):
-    return (
-        feature["properties"]["geoid"],
-        feature["properties"]["p1_001n"],
-    )
-
-
 @click.command()
 @click.argument("infile", type=click.File("r"), nargs=1)
 @click.option("--units-per-dot", type=int, nargs=1, default=1)
-def main(infile, units_per_dot):
+@click.option("--population-variable", type=str, nargs=1, default=None)
+@click.option("--population-expression", type=str, nargs=1, default=None)
+def main(infile, units_per_dot, population_variable, population_expression):
 
-    multipoint = []
+    logging.basicConfig(level=logging.INFO)
+
+    derive_pop = None
+
+    if population_variable is None and population_expression is None:
+        population_variable = "p1_001n"
+    elif population_variable is not None and population_expression is None:
+        pass
+    elif population_variable is None and population_expression is not None:
+        population_variable = "__generated"
+        derive_pop = eval("lambda d:" + population_expression)
+    else:
+        raise click.UsageError(
+            "you cannot set both --population-variable and --population-expression"
+        )
+
     blocks = json.load(infile)
 
-    landuse_densities = densities(blocks["features"])
+    if derive_pop is not None:
+        for feature in blocks["features"]:
+            feature["properties"][population_variable] = derive_pop(
+                feature["properties"]
+            )
+
+    landuse_densities = densities(blocks["features"], population_variable)
+
+    multipoint = []
+
+    def block_key(feature):
+        return (
+            feature["properties"]["geoid"],
+            feature["properties"][population_variable],
+        )
 
     for (_, population), components_g in itertools.groupby(
         blocks["features"], block_key

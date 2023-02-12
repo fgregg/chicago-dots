@@ -1,6 +1,7 @@
 SELECT
     geoid,
     p1_001n,
+    p3_001n,
     landuse,
     st_intersection (blocks_2020.GEOMETRY, landuse_buildings.geometry) AS geometry,
     st_area (st_intersection (blocks_2020.GEOMETRY, landuse_buildings.geometry)) AS intersection_area
