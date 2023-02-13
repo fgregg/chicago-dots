@@ -10,6 +10,8 @@ import numpy
 
 from .densities import densities
 
+RNG = numpy.random.default_rng()
+
 
 def randround(x):
     return int(x + random.random())
@@ -17,7 +19,7 @@ def randround(x):
 
 def random_points(triangle, k):
 
-    u = numpy.random.rand(k, 2)
+    u = RNG.random((k, 2))
 
     invert = u.sum(axis=1) > 1
     u[invert, :] = 1 - u[invert, :]
@@ -74,7 +76,7 @@ def points_in_feature(feature, n_points):
 
     weights /= weights.sum()
 
-    points_per_triangles = numpy.random.multinomial(n_points, weights)
+    points_per_triangles = RNG.multinomial(n_points, weights)
     triangles_with_points = points_per_triangles.nonzero()[0]
 
     for i in triangles_with_points:
@@ -141,7 +143,7 @@ def main(infile, units_per_dot, population_variable, population_expression):
         )
         land_use_weights /= land_use_weights.sum()
 
-        points_per_component = numpy.random.multinomial(
+        points_per_component = RNG.multinomial(
             randround(population / units_per_dot), land_use_weights
         )
 
@@ -158,7 +160,7 @@ def main(infile, units_per_dot, population_variable, population_expression):
                 "type": "Feature",
                 "geometry": {
                     "type": "MultiPoint",
-                    "coordinates": multipoint,
+                    "coordinates": RNG.permutation(multipoint).tolist(),
                     "properties": {},
                 },
             }
