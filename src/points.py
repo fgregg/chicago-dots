@@ -147,7 +147,7 @@ def main(infile, units_per_dot, population_variable, population_expression):
 
         for i, component in enumerate(components):
 
-            if k := points_per_component[i] > 0:
+            if (k := points_per_component[i]) > 0:
                 points = points_in_feature(component, k)
                 multipoint.extend(points)
 
