@@ -40,10 +40,9 @@ With all this data prepared, we then take the following steps:
 ## Example: Votes by precincts
 These maps show the number of votes for Toni Preckwinkle in the February 2019 mayoral elections, by electoral precinct in the 5th ward. The 5th ward includes many large parks and non-residential areas.  The map on the left uses uniformly random points within the precincts. The map on the right uses dasymetric dots from this project. 
 
-|| uniform dots | dasymetric dots |
-|-|-|-|
-|Preckwinkle|<img src="https://user-images.githubusercontent.com/536941/218846808-a8702422-3775-4ab9-9280-c67a55b1e777.png" >|<img src="https://user-images.githubusercontent.com/536941/218846743-1dfdf401-ff2e-437a-9895-b930876efeb6.png">|
-|Lightfoot|<img src="https://user-images.githubusercontent.com/536941/218875350-082fbf2a-32b0-44dd-9f69-34524a99222e.png" > | <img src="https://user-images.githubusercontent.com/536941/218875362-bda25549-37e4-4785-97ae-5c4a83ae919e.png"> |
+| uniformly random dots | dasymetric dots |
+|-|-|
+|<img src="https://user-images.githubusercontent.com/536941/218846808-a8702422-3775-4ab9-9280-c67a55b1e777.png" >|<img src="https://user-images.githubusercontent.com/536941/218846743-1dfdf401-ff2e-437a-9895-b930876efeb6.png">|
 
 ## How To use
 Basically, the way to use these points for 
