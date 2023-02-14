@@ -12,6 +12,7 @@
 | 50 people per point | <a href="./points/points_full_50.geojson" download="points_full_1.geojson">points_full_50.geojson</a> (1.1M) | <a href="./points/points_over_18_50.geojson" download="points_over_18_50.geojson">points_over_18_50.geojson</a> (890K) | <a href="./points/points_under_18_50.geojson" download="points_under_18_50.geojson">points_under_18_50.geojson</a> (221K) |
 | 100 people per point | <a href="./points/points_full_100.geojson" download="points_full_100.geojson">points_full_100.geojson</a> (560K) | <a href="./points/points_over_18_100.geojson" download="points_over_18_100.geojson">points_over_18_100.geojson</a> (449K) | <a href="./points/points_under_18_100.geojson" download="points_under_18_100.geojson">points_under_18_100.geojson</a> (111K) |
 
+## What is this
 
 [Dot density maps](https://en.wikipedia.org/wiki/Dot_distribution_map) are a great way to show the distribution of countable things across a map. 
 
@@ -35,6 +36,11 @@ With all this data prepared, we then take the following steps:
 1. For each 2020 census block in Chicago, divide it into subareas of different land uses, building footprints, and non-empty land.
 2. Then, allocate the block population to each subarea in rough proportion to the area of the subarea multiplied by the estimated population density of that land use category. 
 3. Finally, randomly generate points in each subarea.
+
+## Example
+
+![untitled(57)](https://user-images.githubusercontent.com/536941/218846743-1dfdf401-ff2e-437a-9895-b930876efeb6.png)![untitled(56)](https://user-images.githubusercontent.com/536941/218846808-a8702422-3775-4ab9-9280-c67a55b1e777.png)
+
 
 ## How To use
 Basically, the way to use these points for 
