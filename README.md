@@ -5,7 +5,7 @@
 
 | | Full Population | Over-18 Population | Under-18 Population |
 |-|-|-|-|
-| 1 person per point | <a href="https://raw.githubusercontent.com/fgregg/chicago-dots/main/points/points_full_1.geojson" download="points_full_1.geojson">points_full_1.geojson</a> (54M) | points_over_18_1.geojson (44M) | points_under_18_1.geojson (11M) |
+| 1 person per point | <a href="https://bunkum.us/chicago-dots/points/points_full_1.geojson">points_full_1.geojson</a> (54M) | points_over_18_1.geojson (44M) | points_under_18_1.geojson (11M) |
 | 5 people per point | points_full_5.geojson (11M) | points_over_18_5.geojson (8.7M) | points_under_18_5.geojson (2.2M) |
 | 10 people per point | points_full_10.geojson (5.4M) | points_over_18_10.geojson (4.4M) | points_under_18_10.geojson (1.1M) |
 | 50 people per point | points_full_50.geojson (1.1M) | points_over_18_50.geojson (890K) | points_under_18_50.geojson (221K) |
