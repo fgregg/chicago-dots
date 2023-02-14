@@ -3,13 +3,14 @@
 
 <img src="https://user-images.githubusercontent.com/536941/218774150-04f2121d-d834-4eb7-8437-a384659d422c.png" height="300">
 
+
 | | Full Population | Over-18 Population | Under-18 Population |
 |-|-|-|-|
-| 1 person per point | <a href="https://bunkum.us/chicago-dots/points/points_full_1.geojson">points_full_1.geojson</a> (54M) | points_over_18_1.geojson (44M) | points_under_18_1.geojson (11M) |
-| 5 people per point | points_full_5.geojson (11M) | points_over_18_5.geojson (8.7M) | points_under_18_5.geojson (2.2M) |
-| 10 people per point | points_full_10.geojson (5.4M) | points_over_18_10.geojson (4.4M) | points_under_18_10.geojson (1.1M) |
-| 50 people per point | points_full_50.geojson (1.1M) | points_over_18_50.geojson (890K) | points_under_18_50.geojson (221K) |
-| 100 people per point | <a href="https://bunkum.us/chicago-dots/points/points_full_100.geojson" download="points_full_100.geojson">points_full_100.geojson (560K) | points_over_18_100.geojson (449K) | points_under_18_100.geojson (111K) |
+| 1 person per point | <a href="./points/points_full_1.geojson" download="points_full_1.geojson">points_full_1.geojson</a> (54M) | <a href="./points/points_over_18_1.geojson" download="points_over_18_1.geojson">points_over_18_1.geojson</a> (44M) | <a href="./points/points_under_18_1.geojson" download="points_under_18_1.geojson">points_under_18_1.geojson</a> (11M) |
+| 5 people per point | <a href="./points/points_full_5.geojson" download="points_full_5.geojson">points_full_5.geojson</a> (11M) | <a href="./points/points_over_18_5.geojson" download="points_over_18_5.geojson">points_over_18_5.geojson</a> (8.7M) | <a href="./points/points_under_18_5.geojson" download="points_under_18_5.geojson">points_under_18_5.geojson</a> (2.2M) |
+| 10 people per point | <a href="./points/points_full_10.geojson" download="points_full_10.geojson">points_full_10.geojson</a> (5.4M) | <a href="./points/points_over_18_10.geojson" download="points_over_18_10.geojson">points_over_18_10.geojson</a> (4.4M) | <a href="./points/points_under_18_10.geojson" download="points_under_18_10.geojson">points_under_18_10.geojson</a> (1.1M) |
+| 50 people per point | <a href="./points/points_full_50.geojson" download="points_full_1.geojson">points_full_50.geojson</a> (1.1M) | <a href="./points/points_over_18_50.geojson" download="points_over_18_50.geojson">points_over_18_50.geojson</a> (890K) | <a href="./points/points_under_18_50.geojson" download="points_under_18_50.geojson">points_under_18_50.geojson</a> (221K) |
+| 100 people per point | <a href="./points/points_full_100.geojson" download="points_full_100.geojson">points_full_100.geojson (560K) | <a href="./points/points_over_18_100.geojson" download="points_over_18_100.geojson">points_over_18_100.geojson</a> (449K) | <a href="./points/points_under_18_100.geojson" download="points_under_18_100.geojson">points_under_18_100.geojson</a> (111K) |
 
 
 [Dot density maps](https://en.wikipedia.org/wiki/Dot_distribution_map) are a great way to show the distribution of countable things across a map. 
