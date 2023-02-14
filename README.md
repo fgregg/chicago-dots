@@ -12,7 +12,7 @@ But, boundaries often quite weird, and that approach can mean we put dots in the
 It would be nice if we could put the dots where people likely **do** live, and that's what this project is here to help you do, at least for Chicago.
 
 ## Approach
-The U.S. Decennial Census gives us high resolution data on the number of people who live in a census "block," which often looks like a real city block in Chicago. 
+The U.S. Decennial Census gives us high-resolution data on the number of people who live in a census "block," which often looks like a real city block in Chicago. 
 
 We start with this block data and then use [dasymetric mapping](https://en.wikipedia.org/wiki/Dasymetric_map) to refine the block data with auxillary data.
 
@@ -22,9 +22,11 @@ We then further subdivide the landuse data into the portions that intersect with
 
 With all this data prepared, we then take the following steps:
 
-1. For each 2020 census block in Chicago, divide it into subareas of different land uses, building footprints, and empty land.
+1. For each 2020 census block in Chicago, divide it into subareas of different land uses, building footprints, and non-empty land.
 2. Then, allocate the block population to each subarea in rough proportion to the area of the subarea multiplied by the estimated population density of that land use category. 
 3. Finally, randomly generate points in each subarea.
+
+## To use
 
 
 ## to install
