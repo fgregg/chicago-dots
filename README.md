@@ -9,7 +9,7 @@
 | 5 people per point | points_full_5.geojson (11M) | points_over_18_5.geojson (8.7M) | points_under_18_5.geojson (2.2M) |
 | 10 people per point | points_full_10.geojson (5.4M) | points_over_18_10.geojson (4.4M) | points_under_18_10.geojson (1.1M) |
 | 50 people per point | points_full_50.geojson (1.1M) | points_over_18_50.geojson (890K) | points_under_18_50.geojson (221K) |
-| 100 people per point | points_full_100.geojson (560K) | points_over_18_100.geojson (449K) | points_under_18_100.geojson (111K) |
+| 100 people per point | <a href="https://bunkum.us/chicago-dots/points/points_full_100.geojson" download="points_full_100.geojson">points_full_100.geojson (560K) | points_over_18_100.geojson (449K) | points_under_18_100.geojson (111K) |
 
 
 [Dot density maps](https://en.wikipedia.org/wiki/Dot_distribution_map) are a great way to show the distribution of countable things across a map. 
