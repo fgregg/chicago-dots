@@ -43,7 +43,7 @@ These maps show the number of votes for Toni Preckwinkle in the February 2019 ma
 | uniform dots | dasymetric dots |
 |-|-|
 |<img src="https://user-images.githubusercontent.com/536941/218846808-a8702422-3775-4ab9-9280-c67a55b1e777.png" >|<img src="https://user-images.githubusercontent.com/536941/218846743-1dfdf401-ff2e-437a-9895-b930876efeb6.png">|
-
+|<img src="https://user-images.githubusercontent.com/536941/218875350-082fbf2a-32b0-44dd-9f69-34524a99222e.png" > | <img src="https://user-images.githubusercontent.com/536941/218875362-bda25549-37e4-4785-97ae-5c4a83ae919e.png"> |
 
 ## How To use
 Basically, the way to use these points for 
