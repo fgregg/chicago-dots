@@ -1,8 +1,32 @@
-full=--units-per-dot=200 --population-variable=p1_001n
-over_18=--units-per-dot=1 --population-variable=p3_001n
-under_18=--units-per-dot=1 --population-expression='d["p1_001n"] - d["p3_001n"]'
+full_1=--units-per-dot=1 --population-variable=p1_001n
+full_5=--units-per-dot=5 --population-variable=p1_001n
+full_10=--units-per-dot=10 --population-variable=p1_001n
+full_50=--units-per-dot=50 --population-variable=p1_001n
+full_100=--units-per-dot=100 --population-variable=p1_001n
+over_18_1=--units-per-dot=1 --population-variable=p3_001n
+over_18_5=--units-per-dot=5 --population-variable=p3_001n
+over_18_10=--units-per-dot=10 --population-variable=p3_001n
+over_18_50=--units-per-dot=50 --population-variable=p3_001n
+over_18_100=--units-per-dot=100 --population-variable=p3_001n
+under_18_1=--units-per-dot=1 --population-expression='d["p1_001n"] - d["p3_001n"]'
+under_18_5=--units-per-dot=5 --population-expression='d["p1_001n"] - d["p3_001n"]'
+under_18_10=--units-per-dot=10 --population-expression='d["p1_001n"] - d["p3_001n"]'
+under_18_50=--units-per-dot=50 --population-expression='d["p1_001n"] - d["p3_001n"]'
+under_18_100=--units-per-dot=100 --population-expression='d["p1_001n"] - d["p3_001n"]'
 
-all : points_full.geojson points_over_18.geojson points_under_18.geojson
+.PHONY : all
+all : points/points_full_1.geojson points/points_full_5.geojson		\
+      points/points_full_10.geojson points/points_full_50.geojson	\
+      points/points_full_100.geojson points/points_over_18_1.geojson	\
+      points/points_over_18_5.geojson					\
+      points/points_over_18_10.geojson					\
+      points/points_over_18_50.geojson					\
+      points/points_over_18_100.geojson					\
+      points/points_under_18_1.geojson					\
+      points/points_under_18_5.geojson					\
+      points/points_under_18_10.geojson					\
+      points/points_under_18_50.geojson					\
+      points/points_under_18_100.geojson
 
 points_%.geojson : points_full_precision_%.geojson
 	npx geojson-precision -p 5 $< $@
