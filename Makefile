@@ -1,11 +1,11 @@
 full=--units-per-dot=200 --population-variable=p1_001n
-over_18=--units-per-dot=100 --population-variable=p3_001n
-under_18=--units-per-dot=25 --population-expression='d["p1_001n"] - d["p3_001n"]'
+over_18=--units-per-dot=1 --population-variable=p3_001n
+under_18=--units-per-dot=1 --population-expression='d["p1_001n"] - d["p3_001n"]'
 
 all : points_full.geojson points_over_18.geojson points_under_18.geojson
 
 points_%.geojson : points_full_precision_%.geojson
-	npx geojson-precision $< $@
+	npx geojson-precision -p 5 $< $@
 
 points_full_precision_%.geojson : landuse_target.geojson
 	points $($*) $< > $@

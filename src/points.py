@@ -5,8 +5,9 @@ import random
 import sys
 
 import click
-import earcut.earcut as earcut
+import mapbox_earcut as earcut
 import numpy
+import tqdm
 
 from .densities import densities
 
@@ -48,12 +49,14 @@ def triangulate_geometry(geometry):
 
 def triangulate_polygon(geojson_coords):
 
-    flattened_coords = earcut.flatten(geojson_coords)["vertices"]
+    rings_ends = numpy.array(
+        tuple(itertools.accumulate(len(ring) for ring in geojson_coords))
+    )
+    flattened_coords = numpy.array(tuple(itertools.chain.from_iterable(geojson_coords)))
+    triangle_indices = earcut.triangulate_float64(flattened_coords, rings_ends)
+    triangles = flattened_coords[triangle_indices.reshape(-1, 3)]
 
-    triangle_indices = numpy.reshape(earcut.earcut(flattened_coords), (-1, 3))
-    coords = numpy.reshape(flattened_coords, (-1, 2))
-
-    return coords[triangle_indices]
+    return triangles
 
 
 def areas(triangles):
@@ -75,6 +78,10 @@ def points_in_feature(feature, n_points):
     weights = weights[~nans]
 
     weights /= weights.sum()
+
+    if not len(weights):
+        logging.warning("feature didn't have any valid triangles")
+        return []
 
     points_per_triangles = RNG.multinomial(n_points, weights)
     triangles_with_points = points_per_triangles.nonzero()[0]
@@ -129,8 +136,12 @@ def main(infile, units_per_dot, population_variable, population_expression):
             feature["properties"][population_variable],
         )
 
-    for (_, population), components_g in itertools.groupby(
-        blocks["features"], block_key
+    total_blocks = len(
+        {feature["properties"]["geoid"] for feature in blocks["features"]}
+    )
+
+    for (_, population), components_g in tqdm.tqdm(
+        itertools.groupby(blocks["features"], block_key), total=total_blocks
     ):
         components = list(components_g)
 
