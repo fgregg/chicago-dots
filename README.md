@@ -56,7 +56,7 @@ FROM (
          ROW_NUMBER() OVER (PARTITION BY precincts.id) AS point_num,
          precincts.n_votes
   FROM precincts
-  JOIN points_full_1.geom ON ST_Intersects(precincts.geom, points_full_1.geom)
+  JOIN points_full_1 ON ST_Intersects(precincts.geom, points_full_1.geom)
 ) AS intersections
 WHERE point_num <= n_votes;
 ```
