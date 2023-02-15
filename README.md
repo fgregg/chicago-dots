@@ -37,7 +37,7 @@ With all this data prepared, we then take the following steps:
 2. Then, allocate the block population to each subarea in rough proportion to the area of the subarea multiplied by the estimated population density of that land use category. 
 3. Finally, randomly generate points in each subarea.
 
-## Example: Votes by precincts
+## Example: votes by precincts
 These maps show the number of votes for Toni Preckwinkle in the February 2019 mayoral elections, by electoral precinct in the 5th ward. The 5th ward includes many large parks and non-residential areas.  The map on the left uses uniformly random points within the precincts. The map on the right uses dasymetric dots from this project. 
 
 | uniformly random dots | dasymetric dots |
