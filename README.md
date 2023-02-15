@@ -52,11 +52,11 @@ Here's how you might do it in PostGIS:
 ```sql
 SELECT precinct_id, geom
 FROM (
-  SELECT precincts.id AS precinct_id, points.geom AS geom,
+  SELECT precincts.id AS precinct_id, points_full_1.geom AS geom,
          ROW_NUMBER() OVER (PARTITION BY precincts.id) AS point_num,
-         precincts.num_points_to_return
+         precincts.n_votes
   FROM precincts
-  JOIN points ON ST_Intersects(precincts.geom, points.geom)
+  JOIN points ON ST_Intersects(precincts.geom, points_full_1.geom)
 ) AS intersections
 WHERE point_num <= n_votes;
 ```
