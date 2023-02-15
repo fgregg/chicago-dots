@@ -47,7 +47,7 @@ These maps show the number of votes for Toni Preckwinkle in the February 2019 ma
 ## How To use
 For each area you want to N point for, you will find the dasymetric points that intersect with the area. Then take N of those points.
 
-Here's how you might do it in PostGIS:
+Here's how you might do it in PostGIS (assuming you downloaded an imported a GeoJSON file):
 
 ```sql
 SELECT precinct_id, geom
@@ -56,7 +56,7 @@ FROM (
          ROW_NUMBER() OVER (PARTITION BY precincts.id) AS point_num,
          precincts.n_votes
   FROM precincts
-  JOIN points ON ST_Intersects(precincts.geom, points_full_1.geom)
+  JOIN points_full_1.geom ON ST_Intersects(precincts.geom, points_full_1.geom)
 ) AS intersections
 WHERE point_num <= n_votes;
 ```
