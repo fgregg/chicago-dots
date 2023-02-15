@@ -18,9 +18,7 @@
 
 The usual approach is to randomly generate N points within a boundary, where N is proportional to the number you want to show, i.e. the number of people who live in a census block or the number of people who voted for a candidate in election precinct.
 
-But, boundaries often quite weird, and that approach can mean we put dots in the lake or the middle of the highway, or other places we know people don't live. 
-
-It would be nice if we could put the dots where people likely **do** live, and that's what this project is here to help you do, at least for Chicago.
+But boundaries are often quite weird, and that approach can mean we put dots in the lake or the middle of the highway. If the data we are mapping is related to where people live, it would be nice to put them where people are likely to be. That's what this project is here to help you do, at least for Chicago.
 
 ## Approach
 The U.S. Decennial Census gives us high-resolution data on the number of people who live in a census "block," which often looks like a real city block in Chicago. 
