@@ -45,15 +45,54 @@ These maps show the number of votes for Toni Preckwinkle in the February 2019 ma
 |<img src="https://user-images.githubusercontent.com/536941/218846808-a8702422-3775-4ab9-9280-c67a55b1e777.png" >|<img src="https://user-images.githubusercontent.com/536941/218846743-1dfdf401-ff2e-437a-9895-b930876efeb6.png">|
 
 ## How To use
-Basically, the way to use these points for 
+For each area you want to N point for, you will find the dasymetric points that intersect with the area. Then take N of those points.
 
+Here's how you might do it in PostGIS:
 
-## to install
-```console
-> pip install .
+```sql
+SELECT precinct_id, geom
+FROM (
+  SELECT precincts.id AS precinct_id, points.geom AS geom,
+         ROW_NUMBER() OVER (PARTITION BY precincts.id) AS point_num,
+         precincts.num_points_to_return
+  FROM precincts
+  JOIN points ON ST_Intersects(precincts.geom, points.geom)
+) AS intersections
+WHERE point_num <= num_points_to_return;
 ```
 
-## to run
-```console
-> make
+or with Python along with geopandas and shapely:
+
+```python
+import geopandas as gpd
+from shapely.geometry import MultiPoint
+
+# Load the polygons and points into GeoDataFrames
+polygons = gpd.read_file('path/to/polygons.geojson')
+points = gpd.read_file('path/to/points_full_1.geojson')
+
+# Extract the MultiPoint feature from the points GeoDataFrame
+multipoint = points.iloc[0].geometry
+
+# Create a new GeoDataFrame with the MultiPoint feature
+multipoint_gdf = gpd.GeoDataFrame(geometry=[multipoint], crs=points.crs)
+
+# Perform the spatial join to find the intersections
+intersections = gpd.sjoin(multipoint_gdf, polygons, op='intersects')
+
+# Split multi-point geometries into individual rows
+intersections = intersections.explode()
+
+# Group by polygon and sample arbitrary points
+arbitrary_points = intersections.groupby('index_right').apply(lambda x: x.sample(n=x.iloc[0]['num_points_to_return'])).reset_index(drop=True)
+
+# Get the point geometry as a new column in the DataFrame
+arbitrary_points['geom'] = arbitrary_points['geometry']
+
+# Keep only the relevant columns and rename them for clarity
+arbitrary_points = arbitrary_points[['index_right', 'id', 'geom']]
+arbitrary_points.columns = ['polygon_id', 'point_id', 'geom']
+
+# Show the first 20 intersections for each polygon
+arbitrary_points.groupby('polygon_id').head(20)
 ```
