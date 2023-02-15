@@ -58,7 +58,7 @@ FROM (
   FROM precincts
   JOIN points ON ST_Intersects(precincts.geom, points.geom)
 ) AS intersections
-WHERE point_num <= num_points_to_return;
+WHERE point_num <= n_votes;
 ```
 
 or with Python along with geopandas and shapely:
@@ -68,7 +68,7 @@ import geopandas as gpd
 from shapely.geometry import MultiPoint
 
 # Load the polygons and points into GeoDataFrames
-polygons = gpd.read_file('path/to/polygons.geojson')
+polygons = gpd.read_file('path/to/precincts.geojson')
 points = gpd.read_file('path/to/points_full_1.geojson')
 
 # Extract the MultiPoint feature from the points GeoDataFrame
@@ -84,7 +84,7 @@ intersections = gpd.sjoin(multipoint_gdf, polygons, op='intersects')
 intersections = intersections.explode()
 
 # Group by polygon and sample arbitrary points
-arbitrary_points = intersections.groupby('index_right').apply(lambda x: x.sample(n=x.iloc[0]['num_points_to_return'])).reset_index(drop=True)
+arbitrary_points = intersections.groupby('index_right').apply(lambda x: x.sample(n=x.iloc[0]['n_votes'])).reset_index(drop=True)
 
 # Get the point geometry as a new column in the DataFrame
 arbitrary_points['geom'] = arbitrary_points['geometry']
