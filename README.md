@@ -115,3 +115,8 @@ To build yourself:
 > make
 ```
 
+## Code
+[github](https://github.com/fgregg/chicago-dots)
+
+## Thanks
+The random point generation is adapted from [Ben Schmidt's dot density code](https://observablehq.com/@bmschmidt/dot-density). 
