@@ -96,3 +96,22 @@ arbitrary_points.columns = ['polygon_id', 'point_id', 'geom']
 # Show the first 20 intersections for each polygon
 arbitrary_points.groupby('polygon_id').head(20)
 ```
+
+## To Build data youself
+To build yourself:
+
+### system requirements
+* wget
+* gdal
+* gdal-bin
+* libgdal-dev
+* libsqlite3-mod-spatialite
+* spatialite-bin
+
+```console
+> git clone git@github.com:fgregg/chicago-dots.git
+> cd chicago-dots
+> pip install -e .
+> make
+```
+
