@@ -12,7 +12,7 @@
 | 50 people per point | <a href="./points/points_full_50.geojson" download="points_full_1.geojson">points_full_50.geojson</a> (1.1M) | <a href="./points/points_over_18_50.geojson" download="points_over_18_50.geojson">points_over_18_50.geojson</a> (890K) | <a href="./points/points_under_18_50.geojson" download="points_under_18_50.geojson">points_under_18_50.geojson</a> (221K) |
 | 100 people per point | <a href="./points/points_full_100.geojson" download="points_full_100.geojson">points_full_100.geojson</a> (560K) | <a href="./points/points_over_18_100.geojson" download="points_over_18_100.geojson">points_over_18_100.geojson</a> (449K) | <a href="./points/points_under_18_100.geojson" download="points_under_18_100.geojson">points_under_18_100.geojson</a> (111K) |
 
-## What is this
+## What is this?
 
 [Dot density maps](https://en.wikipedia.org/wiki/Dot_distribution_map) are a great way to show the distribution of countable things across a map. 
 
@@ -44,7 +44,7 @@ These maps show the number of votes for Toni Preckwinkle in the February 2019 ma
 |-|-|
 |<img src="https://user-images.githubusercontent.com/536941/218846808-a8702422-3775-4ab9-9280-c67a55b1e777.png" >|<img src="https://user-images.githubusercontent.com/536941/218846743-1dfdf401-ff2e-437a-9895-b930876efeb6.png">|
 
-## How To use
+## How to use
 For each area you want to N point for, you will find the dasymetric points that intersect with the area. Then take N of those points.
 
 Here's how you might do it in PostGIS (assuming you downloaded an imported a GeoJSON file):
@@ -97,8 +97,7 @@ arbitrary_points.columns = ['polygon_id', 'point_id', 'geom']
 arbitrary_points.groupby('polygon_id').head(20)
 ```
 
-## To Build data youself
-To build yourself:
+## To build data youself
 
 ### system requirements
 * wget
