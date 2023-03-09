@@ -53,12 +53,11 @@ landuse_cvap.geojson: chicago.db
 landuse_target.geojson : chicago.db
 	ogr2ogr -f GeoJSON $@ $< -sql @scripts/landuse_target.sql -dialect sqlite
 
-chicago.db : raw/blocks_2020.geojson Landuse2018_CMAP_v1.gdb buildings.shp blockgroups.geojson BlockGr.csv
+chicago.db : raw/blocks_2020.geojson Landuse2018_CMAP_v1.gdb buildings.shp raw/blockgroups.geojson BlockGr.csv
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -t_srs "EPSG:4326" $@ raw/blocks_2020.geojson -nlt PROMOTE_TO_MULTI
-	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ blockgroups.geojson -nlt PROMOTE_TO_MULTI
+	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ raw/blockgroups.geojson -nlt PROMOTE_TO_MULTI
 	csvs-to-sqlite BlockGr.csv $@
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ Landuse2018_CMAP_v1.gdb -nlt PROMOTE_TO_MULTI
-	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ buildings.shp -nlt PROMOTE_TO_MULTI
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ buildings.shp -nlt PROMOTE_TO_MULTI
 	spatialite $@ < scripts/landuse_buildings.sql
 	spatialite $@ < scripts/cvap.sql
@@ -81,8 +80,8 @@ Landuse2018_CMAP_v1.gdb.zip : raw/LandUseInventory_2018_CMAP.zip
 raw/LandUseInventory_2018_CMAP.zip :
 	wget -O $@ "https://stargishub01.blob.core.windows.net/cmap-arcgis-hub01-blob/Open_Data/LandUseInventory_2018_CMAP.zip"
 
-blockgroups.geojson :
-	python scripts/blockgroups.py
+raw/blockgroups.geojson :
+	python scripts/block_groups.py > $@
 
 BlockGr.csv : raw/CVAP_2017-2021_ACS_csv_files.zip
 	unzip -p $< $@ > $@
