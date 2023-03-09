@@ -23,12 +23,11 @@ def random_points(triangle, k):
     u = RNG.random((k, 2))
 
     invert = u.sum(axis=1) > 1
-    u[invert, :] = 1 - u[invert, :]
+    u[invert] = 1 - u[invert]
 
-    a = triangle[1, :] - triangle[0, :]
-    b = triangle[2, :] - triangle[0, :]
+    sides = triangle[1:] - triangle[0]
 
-    pts = triangle[0, :] + u @ numpy.c_[a, b]
+    pts = triangle[0] + u @ sides
 
     return pts
 
@@ -87,7 +86,7 @@ def points_in_feature(feature, n_points):
     triangles_with_points = points_per_triangles.nonzero()[0]
 
     for i in triangles_with_points:
-        triangle = triangles[i, :, :]
+        triangle = triangles[i]
         points_per_triangle = points_per_triangles[i]
         points = random_points(triangle, points_per_triangle)
         polygon_points.extend(points.tolist())
