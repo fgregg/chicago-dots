@@ -13,6 +13,11 @@ under_18_5=--units-per-dot=5 --population-expression='d["p1_001n"] - d["p3_001n"
 under_18_10=--units-per-dot=10 --population-expression='d["p1_001n"] - d["p3_001n"]'
 under_18_50=--units-per-dot=50 --population-expression='d["p1_001n"] - d["p3_001n"]'
 under_18_100=--units-per-dot=100 --population-expression='d["p1_001n"] - d["p3_001n"]'
+total=--units-per-dot=1 --population-variable=total
+black=--units-per-dot=1 --population-variable=black
+asian=--units-per-dot=1 --population-variable=asian
+hispanic=--units-per-dot=1 --population-variable=hispanic
+white=--units-per-dot=1 --population-variable=white
 
 .PHONY : all
 all : points/points_full_1.geojson points/points_full_5.geojson		\
@@ -26,10 +31,18 @@ all : points/points_full_1.geojson points/points_full_5.geojson		\
       points/points_under_18_5.geojson					\
       points/points_under_18_10.geojson					\
       points/points_under_18_50.geojson					\
-      points/points_under_18_100.geojson
+      points/points_under_18_100.geojson				\
+      points/points_cvap_total.geojson					\
+      points/points_cvap_black.geojson					\
+      points/points_cvap_white.geojson					\
+      points/points_cvap_asian.geojson					\
+      points/points_cvap_hispanic.geojson
 
-points_%.geojson : points_full_precision_%.geojson
+points/points_%.geojson : points_full_precision_%.geojson
 	npx geojson-precision -p 5 $< $@
+
+points_full_precision_cvap_%.geojson : landuse_cvap.geojson
+	points $($*) $< > $@
 
 points_full_precision_%.geojson : landuse_target.geojson
 	points $($*) $< > $@
@@ -48,6 +61,7 @@ chicago.db : raw/blocks_2020.geojson Landuse2018_CMAP_v1.gdb buildings.shp block
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ buildings.shp -nlt PROMOTE_TO_MULTI
 	ogr2ogr -f SQLite -dsco SPATIALITE=YES -append -t_srs "EPSG:4326" $@ buildings.shp -nlt PROMOTE_TO_MULTI
 	spatialite $@ < scripts/landuse_buildings.sql
+	spatialite $@ < scripts/cvap.sql
 
 buildings.shp : raw/buildings.zip
 	unzip $<
