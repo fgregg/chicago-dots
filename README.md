@@ -63,36 +63,19 @@ or with Python along with geopandas and shapely:
 
 ```python
 import geopandas as gpd
-from shapely.geometry import MultiPoint
 
 # Load the polygons and points into GeoDataFrames
 polygons = gpd.read_file('path/to/precincts.geojson')
-points = gpd.read_file('path/to/points_full_1.geojson')
+multipoint = gpd.read_file('path/to/points_full_1.geojson')
 
-# Extract the MultiPoint feature from the points GeoDataFrame
-multipoint = points.iloc[0].geometry
-
-# Create a new GeoDataFrame with the MultiPoint feature
-multipoint_gdf = gpd.GeoDataFrame(geometry=[multipoint], crs=points.crs)
+# Turn into points
+points = multipoint.explode(index_parts=True)
 
 # Perform the spatial join to find the intersections
-intersections = gpd.sjoin(multipoint_gdf, polygons, op='intersects')
-
-# Split multi-point geometries into individual rows
-intersections = intersections.explode()
+intersections = gpd.sjoin(points, polygons, op='intersects')
 
 # Group by polygon and sample arbitrary points
-arbitrary_points = intersections.groupby('index_right').apply(lambda x: x.sample(n=x.iloc[0]['n_votes'])).reset_index(drop=True)
-
-# Get the point geometry as a new column in the DataFrame
-arbitrary_points['geom'] = arbitrary_points['geometry']
-
-# Keep only the relevant columns and rename them for clarity
-arbitrary_points = arbitrary_points[['index_right', 'id', 'geom']]
-arbitrary_points.columns = ['polygon_id', 'point_id', 'geom']
-
-# Show the first 20 intersections for each polygon
-arbitrary_points.groupby('polygon_id').head(20)
+arbitrary_points = intersections.groupby('index_right').apply(lambda x: x.sample(n=x.iloc[0]['TONI PRECKWINKLE'], replace=True)).reset_index(drop=True)
 ```
 
 ## To build data youself
